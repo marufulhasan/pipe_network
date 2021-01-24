@@ -1,0 +1,14 @@
+button[name = "run"]{
+	  background-color: #80b3ff;
+  border: none;
+  width: 500px;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  font-weight: bold;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 40px 200px;
+  cursor: pointer;
+}

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<head>
+    <title>Hydraulic Network</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/2.7.10/cytoscape.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/style.css') }}">
+
+</head>
+
+<body>
+  <button name= "run">Click Here to Run</button>
+  <div style="margin-left: 50px; font-style: italic;">
+    Maruful Hasan
+    <br>
+    maruful.hasan@gmail.com
+  </div>
+  <br><br>
+    <div style="margin-left: 50px;">
+      <strong>Instruction </strong>: Click feed, products or pipes to update the model.
+  </div>
+  <div id="node_dialog" >
+    <form style="display: grid; font-size: 11px; grid-template-columns: 100px 100px; grid-gap: 5px;">
+      <label for ="pressure">Pressure (psig)</label>
+      <input type="text" name="pressure">
+    </form>
+  </div>
+
+  <div id="edge_dialog" >
+    <form name = "edge_form" style="display: grid; font-size: 11px; grid-template-columns: 100px 100px; grid-gap: 5px;">
+      <label>Length (ft)</label>
+      <input type="text" name="length">
+      <label>Diameter (inch)</label>
+      <input type="text" name="diameter">
+      <label>Roughness (inch)</label>
+      <input type="text" name="roughness">
+      <label>Density (lb/ft3)</label>
+      <input type="text" name="density" disabled="true" value = "62.4">
+      <label>Viscosity (cp)</label>
+      <input type="text" name="viscosity" disabled="true" value = "1">
+    </form>
+  </div>
+    <div id="cy"></div>
+
+    <style type="text/css">
+       #cy {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 100px;
+        left: 0px;
+    }
+    </style>
+
+     <script>
+
+      $("#node_dialog").dialog({
+          autoOpen  : false,
+          modal     : true,
+          height    : 200,
+          width:     400,
+          title     : "Node Input",  
+
+          buttons   : {         
+                    'update': 
+                          {   
+                              text : "Update",
+                              click: function() { 
+                                  var curr_pressure = $('input[name = "pressure"').val();
+                                    $('#node_dialog').data('curr_node').data('pressure', curr_pressure);
+                                    $(this).dialog('close');  
+                                } 
+                          }
+                       }                 
+                   }).prev(".ui-dialog-titlebar").css("font-size","11px");
+
+          $("#edge_dialog").dialog({
+          autoOpen  : false,
+          modal     : true,
+          height    : 300,
+          width:     300,
+          title     : "Edge Input",  
+
+          buttons   : {         
+                    'update': 
+                          {   
+                              text : "Update",
+                              click: function() {                            
+                              var curr_length = $('input[name= "length"]').val();
+                              var curr_diameter = $('input[name= "diameter"]').val();
+                              var curr_roughness = $('input[name= "roughness"]').val();
+
+                              $('#edge_dialog').data('curr_edge').data('length', curr_length);
+                              $('#edge_dialog').data('curr_edge').data('diameter', curr_diameter);
+                              $('#edge_dialog').data('curr_edge').data('roughness', curr_roughness);                                    
+                   
+                              $(this).dialog('close');  
+                            } 
+                          }
+                       }                 
+                   });
+
+          var cy = cytoscape({
+          container: document.getElementById('cy'),
+        });
+
+        // var eles = cy.add([
+        //   { group: 'nodes', data: { id: 'n0', 'node_type':'feed', 'pressure': "100" }, position: { x: 100, y: 300 }, style: {'shape': 'square','background-color': 'grey', 'label': 'Feed', 'text-margin-y': -10}},
+        //   { group: 'nodes', data: { id: 'n1', 'node_type':'cont', 'pressure': '' }, position: { x: 300, y: 300 }, style: {'shape': 'circle','background-color': 'grey'} },
+        //    { group: 'nodes', data: { id: 'n2', 'node_type':'feed', 'pressure': "40" }, position: { x: 500, y: 200 }, style: {'shape': 'square','background-color': 'grey', 'label': 'Prod_1', 'text-margin-y': -10} },
+        //    { group: 'nodes', data: { id: 'n3', 'node_type':'feed', 'pressure': "50" }, position: { x: 500, y: 400 }, style: {'shape': 'square','background-color': 'grey', 'label': 'Prod_2', 'text-margin-y': -10} },
+        //   { group: 'edges', data: { id: 'e0', source: 'n0', target: 'n1', 'density': "32.2", "length": "100", "viscosity": "1", "diameter": "4", "roughness": "0.00015"  }},
+        //   { group: 'edges', data: { id: 'e1', source: 'n1', target: 'n2', 'density': "32.2", "length": "100", "viscosity": "0.1", "diameter": "4", "roughness": "0.00015" }},
+        //   { group: 'edges', data: { id: 'e2', source: 'n1', target: 'n3', 'density': "62.2", "length": "50", "viscosity": "1", "diameter": "4", "roughness": "0.00015" }}
+        // ]);
+
+        var eles = cy.add([
+          { group: 'nodes', data: { id: 'n0', 'node_type':'feed', 'pressure': "100" }, position: { x: 100, y: 300 }, style: {'shape': 'square','background-color': 'grey', 'label': 'Feed', 'text-margin-y': -10}},
+          { group: 'nodes', data: { id: 'n1', 'node_type':'cont', 'pressure': '' }, position: { x: 300, y: 300 }, style: {'shape': 'circle','background-color': 'grey'} },
+           { group: 'nodes', data: { id: 'n2', 'node_type':'cont', 'pressure': '' }, position: { x: 500, y: 200 }, style: {'shape': 'circle','background-color': 'grey'} },
+           { group: 'nodes', data: { id: 'n3', 'node_type':'cont', 'pressure': '' }, position: { x: 500, y: 400 }, style: {'shape': 'circle','background-color': 'grey'} },
+            { group: 'nodes', data: { id: 'n4', 'node_type':'cont', 'pressure': '' }, position: { x: 700, y: 300 }, style: {'shape': 'circle','background-color': 'grey'} },
+             { group: 'nodes', data: { id: 'n5', 'node_type':'feed', 'pressure': '40' }, position: { x: 900, y: 150 }, style: {'shape': 'square','background-color': 'grey', 'label': 'Prod_1', 'text-margin-y': -10} },
+              { group: 'nodes', data: { id: 'n6', 'node_type':'feed', 'pressure': "50" }, position: { x: 900, y: 300 }, style: {'shape': 'square','background-color': 'grey', 'label': 'Prod_2', 'text-margin-y': -10} },
+               { group: 'nodes', data: { id: 'n7', 'node_type':'feed', 'pressure': "30" }, position: { x: 900, y: 450 }, style: {'shape': 'square','background-color': 'grey', 'label': 'Prod_3', 'text-margin-y': -10} },
+          { group: 'edges', data: { id: 'e0', source: 'n0', target: 'n1', 'density': "62.4", "length": "100", "viscosity": "1", "diameter": "4", "roughness": "0.00015"  }},
+          { group: 'edges', data: { id: 'e1', source: 'n1', target: 'n2', 'density': "62.4", "length": "100", "viscosity": "0.1", "diameter": "4", "roughness": "0.00015" }},
+          { group: 'edges', data: { id: 'e2', source: 'n1', target: 'n3', 'density': "62.4", "length": "50", "viscosity": "1", "diameter": "4", "roughness": "0.00015" }, style:{'curve-style': 'bezier','target-arrow-shape': 'triangle'}},
+          { group: 'edges', data: { id: 'e3', source: 'n2', target: 'n4', 'density': "62.4", "length": "50", "viscosity": "1", "diameter": "4", "roughness": "0.00015" }, style:{'curve-style': 'bezier','target-arrow-shape': 'triangle'}},
+          { group: 'edges', data: { id: 'e4', source: 'n3', target: 'n4', 'density': "62.4", "length": "50", "viscosity": "1", "diameter": "4", "roughness": "0.00015" }, style:{'curve-style': 'bezier','target-arrow-shape': 'triangle'}},
+          { group: 'edges', data: { id: 'e5', source: 'n2', target: 'n5', 'density': "62.4", "length": "50", "viscosity": "1", "diameter": "4", "roughness": "0.00015" }, style:{'curve-style': 'bezier','target-arrow-shape': 'triangle'}},
+          { group: 'edges', data: { id: 'e6', source: 'n4', target: 'n6', 'density': "62.4", "length": "50", "viscosity": "1", "diameter": "4", "roughness": "0.00015" }, style:{'curve-style': 'bezier','target-arrow-shape': 'triangle'}},
+          { group: 'edges', data: { id: 'e7', source: 'n3', target: 'n7', 'density': "62.4", "length": "50", "viscosity": "1", "diameter": "4", "roughness": "0.00015" }, style:{'curve-style': 'bezier','target-arrow-shape': 'triangle'}},
+          { group: 'edges', data: { id: 'e8', source: 'n2', target: 'n3', 'density': "62.4", "length": "50", "viscosity": "1", "diameter": "4", "roughness": "0.00015" }, style:{'curve-style': 'bezier','target-arrow-shape': 'triangle'}}
+        ]);
+
+
+
+
+        cy.bind("click", 'node[node_type = "feed"]', function(evt) {
+          var curr_pressure  = this.data().pressure;
+
+
+          $('input[name= "pressure"]').val(curr_pressure);
+          $( "#node_dialog" ).data('curr_node', this).dialog("open");
+
+        })
+
+        cy.bind("click", 'edge', function(evt) {
+            var curr_length= this.data().length;  
+            var curr_diameter = this.data().diameter;
+            var curr_roughness = this.data().roughness;
+            $('input[name = "diameter"]').val(curr_diameter);
+            $('input[name = "length"]').val(curr_length);
+            $('input[name = "roughness"]').val(curr_roughness);     
+
+          $( "#edge_dialog" ).data('curr_edge', this).dialog("open");
+
+        })
+
+ $('button[name = "run"]').click(function(){
+    //console.log(JSON.stringify(cy.elements().jsons()));
+
+                    var input_data = cy.elements().jsons();                
+                  
+                       $.ajax({
+                          type: 'POST',
+                          url: '/calc',
+                          dataType: 'json',
+                          contentType: 'application/json; charset=utf-8',
+                          data: JSON.stringify(input_data),
+
+                          success: function(callback) { 
+                            output_data = callback.result;
+                            cy.edges().each(function(i,j){
+                              var curr_ID = this.data().id;
+                              var curr_flow = output_data[curr_ID];
+                              this.style('label', curr_flow + ' ft3/s');
+                              this.style('text-margin-y', -30);
+
+                            });
+                         
+                              
+                            }                 
+
+                       });
+
+                  })
+
+    </script>
+
+
+
+</body>
+
+
+
+
+
+</html>
