@@ -16,7 +16,7 @@ def get_result (input_data):
             if element['data']['pressure'] == '':
                 G.add_node(element['data']['id'] ,type= element['data']['node_type'], T=100,P=(element['data']['pressure']))
             else:
-                G.add_node(element['data']['id'] ,type= element['data']['node_type'], T=100,P=float(element['data']['pressure']))
+                G.add_node(element['data']['id'] ,type= element['data']['node_type'], T=100,P=2.31 * (14.696 + float(element['data']['pressure'])))
 
         else:
             G.add_edge(element['data']['source'], element['data']['target'], Q='',ID=element['data']['id'],rho=62.4,mu=0.000671968994813,\
