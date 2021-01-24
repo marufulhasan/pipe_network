@@ -20,7 +20,7 @@ def get_result (input_data):
 
         else:
             G.add_edge(element['data']['source'], element['data']['target'], Q='',ID=element['data']['id'],rho=62.4,mu=0.000671968994813,\
-                segments={1:{'var':'pipe','L':float(element['data']['length']),'D':float(element['data']['diameter']),'roughness':float(element['data']['roughness'])}})
+                segments={1:{'var':'pipe','L':float(element['data']['length']),'D':float(element['data']['diameter'])/12,'roughness':float(element['data']['roughness'])}})
 
     # G.add_node('n0',type='feed', T=100,P=231.0)
     # G.add_edge('n0','n1',Q='',ID=1,rho=62.4,mu=0.000671968994813,segments={1:{'var':'pipe','L':100.0,'D':0.5,'roughness':0.0001509}})
