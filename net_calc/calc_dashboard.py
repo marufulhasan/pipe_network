@@ -78,7 +78,7 @@ def get_result (input_data):
             break
 
     for key in result.keys():
-        result[key]= round (result[key]*528.92, 2)
+        result[key]= round (result[key]*62.4*3600, 2)
 
 
 
