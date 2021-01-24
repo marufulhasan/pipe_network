@@ -91,7 +91,8 @@ def get_dp(G,node1,node2,i=0):
     Q=abs(Q)
 
     for segment in edge_data['segments'].values():
-        L,D,epsilon= segment['L'],segment['D'],segment['roughness']
+        L,D= segment['L'],segment['D']
+        epsilon = segment['roughness']/D
         rho,mu=62.36,0.000673 # TBD, add inside segment
         re=get_reynolds_number(D,Q,rho,mu)
         f=get_friction_factor(epsilon,re)
